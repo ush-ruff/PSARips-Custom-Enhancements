@@ -4,13 +4,14 @@
 // @match        https://psarips.*/*
 // @match        https://psa.*/*
 // @match        https://x265.club/*
-// @version      1.0.0
+// @version      1.1.0
 // @author       ushruff
 // @description  Setup custom keyboard shortcuts and other quality of life enhancments for PSARips
 // @homepageURL  https://github.com/ush-ruff/PSARips-Custom-Enhancements/
 // @downloadURL  https://github.com/ush-ruff/PSARips-Custom-Enhancements/raw/main/script.user.js
 // @grant        none
 // @license      GNU GPLv3
+// @require      https://raw.githubusercontent.com/ush-ruff/Common/main/Userscript-Helper-Lib/helpersBootstrap.js
 // ==/UserScript==
 
 // -----------------------
@@ -57,36 +58,14 @@ const IMDB_ICON = `
 // -------------------------------------------
 // Setup Dependencies
 // -------------------------------------------
-const LIB_INSTALL_URL = "https://raw.githubusercontent.com/ush-ruff/Common/main/Userscript-Helper-Lib/helpersLib.user.js"
-
-function ensureLibrary() {
-  const lib = window.ushruffUSKit
-
-  if (!lib) {
-    console.error(
-      `The installed script requires ushrufUSKit library. Install the script and refresh the current tab.\n` +
-      `If the script does not automatically redirect you, visit the following link.\n` +
-      `${LIB_INSTALL_URL}` +
-      `Ensure that the library runs before the current script to avoid errors.`
-    )
-    window.open(LIB_INSTALL_URL, "_blank")
-    return false
-  }
-
-  return true
-}
-
-if (!ensureLibrary()) {
-  return
-}
-
-const { installKeyHandler, focusSelectElement, setupShortcutInfo, showShortcutInfo } = window.ushruffUSKit
+const ushruffUSKit = ensureUSKit.getUSKit()
+const { installKeyHandler, focusSelectElement, setupShortcutInfo, showShortcutInfo } = ushruffUSKit
 
 
 // -------------------------------------------
 // Event Listeners
 // -------------------------------------------
-window.addEventListener("load", () => { 
+window.addEventListener("load", () => {
   insertBtns()
   installKeyHandler(KEYS)
   setupShortcutInfo(MODAL_ID, KEYS)
