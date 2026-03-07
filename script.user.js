@@ -4,7 +4,7 @@
 // @match        https://psarips.*/*
 // @match        https://psa.*/*
 // @match        https://x265.club/*
-// @version      0.1.0
+// @version      1.0.0
 // @author       ushruff
 // @description  Setup custom keyboard shortcuts and other quality of life enhancments for PSARips
 // @homepageURL  https://github.com/ush-ruff/PSARips-Custom-Enhancements/
@@ -17,8 +17,17 @@
 // CONFIGURABLE VARIABLES
 // -----------------------
 const KEYS = {
-  70: () => focusSelectElement(`#page .search-field`),        // key: F
+  "F": {
+    action: () => focusSelectElement(`#page .search-field`),
+    label: "Search",
+  },
+  "Shift + ?": {
+    action: () => showShortcutInfo(MODAL_ID),
+    label: "Show shortcut help",
+  }
 }
+
+const MODAL_ID = "shortcut-modal"
 
 
 // --------------------
@@ -46,30 +55,47 @@ const IMDB_ICON = `
 
 
 // -------------------------------------------
+// Setup Dependencies
+// -------------------------------------------
+const LIB_INSTALL_URL = "https://raw.githubusercontent.com/ush-ruff/Common/main/Userscript-Helper-Lib/helpersLib.user.js"
+
+function ensureLibrary() {
+  const lib = window.ushruffUSKit
+
+  if (!lib) {
+    console.error(
+      `The installed script requires ushrufUSKit library. Install the script and refresh the current tab.\n` +
+      `If the script does not automatically redirect you, visit the following link.\n` +
+      `${LIB_INSTALL_URL}` +
+      `Ensure that the library runs before the current script to avoid errors.`
+    )
+    window.open(LIB_INSTALL_URL, "_blank")
+    return false
+  }
+
+  return true
+}
+
+if (!ensureLibrary()) {
+  return
+}
+
+const { installKeyHandler, focusSelectElement, setupShortcutInfo, showShortcutInfo } = window.ushruffUSKit
+
+
+// -------------------------------------------
 // Event Listeners
 // -------------------------------------------
-window.addEventListener("load", insertBtns)
-document.addEventListener("keyup", pressKey)
+window.addEventListener("load", () => { 
+  insertBtns()
+  installKeyHandler(KEYS)
+  setupShortcutInfo(MODAL_ID, KEYS)
+})
 
 
 // -------------------------------------------
 // Main Functions
 // -------------------------------------------
-function pressKey(e) {
-  let key = e.keyCode
-
-  if (e.ctrlKey) key = `ctrl+${key}`
-  if (e.shiftKey) key = `shift+${key}`
-  if (e.altKey) key = `alt+${key}`
-
-  if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA") return
-
-  if (key in KEYS) {
-    return KEYS[key]()
-  }
-}
-
-
 function insertBtns() {
   const postTitle = document.querySelector(SELECTORS.postTitle)
   if (!postTitle) return console.error("Failed to get the post title!")
@@ -87,18 +113,5 @@ function insertBtns() {
   const imdbHtml = `<a href="${imdbMovieLink || fallbackSearch}" target="_blank" title="Open in IMDb">${IMDB_ICON}</a>`
 
   postTitle.innerHTML = `${postTitleText}${imdbHtml}`
-}
-
-
-// -------------------------------------------
-// Helper Functions
-// -------------------------------------------
-function focusSelectElement(element) {
-  const el = document.querySelector(element)
-
-  if (el !== null) {
-    el.focus()
-    el.select()
-  }
 }
 
