@@ -4,7 +4,7 @@
 // @match        https://psarips.*/*
 // @match        https://psa.*/*
 // @match        https://x265.club/*
-// @version      1.1.0
+// @version      1.1.1
 // @author       ushruff
 // @description  Setup custom keyboard shortcuts and other quality of life enhancments for PSARips
 // @homepageURL  https://github.com/ush-ruff/PSARips-Custom-Enhancements/
@@ -28,7 +28,8 @@ const KEYS = {
   }
 }
 
-const MODAL_ID = "shortcut-modal"
+const SCRIPT_ID = "PSARips-custom-enhancements"
+const MODAL_ID = "PSARips-shortcut-modal"
 
 
 // --------------------
@@ -59,7 +60,7 @@ const IMDB_ICON = `
 // Setup Dependencies
 // -------------------------------------------
 const ushruffUSKit = ensureUSKit.getUSKit()
-const { installKeyHandler, focusSelectElement, setupShortcutInfo, showShortcutInfo } = ushruffUSKit
+const { registerShortcutKeys, focusSelectElement, setupShortcutInfo, showShortcutInfo } = ushruffUSKit
 
 
 // -------------------------------------------
@@ -67,7 +68,7 @@ const { installKeyHandler, focusSelectElement, setupShortcutInfo, showShortcutIn
 // -------------------------------------------
 window.addEventListener("load", () => {
   insertBtns()
-  installKeyHandler(KEYS)
+  registerShortcutKeys(SCRIPT_ID, KEYS)
   setupShortcutInfo(MODAL_ID, KEYS)
 })
 
