@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         PSARips - Custom Enhancements
 // @namespace    Violentmonkey Scripts
-// @match        https://psarips.*/*
-// @match        https://psa.*/*
+// @include      /^https://psarips\.[^/]*?/.*?$/
+// @include      /^https://psa\.[^/]*?/.*?$/
 // @match        https://x265.club/*
-// @version      1.1.1
+// @version      1.2.0
 // @author       ushruff
 // @description  Setup custom keyboard shortcuts and other quality of life enhancments for PSARips
 // @homepageURL  https://github.com/ush-ruff/PSARips-Custom-Enhancements/
@@ -19,7 +19,7 @@
 // -----------------------
 const KEYS = {
   "F": {
-    action: () => focusSelectElement(`#page .search-field`),
+    action: () => focusSelectElement(`#page .search-field, .sidebar .AjaxSearchLiteWidget input`),
     label: "Search",
   },
   "Shift + ?": {
